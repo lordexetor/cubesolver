@@ -7,9 +7,19 @@ int main(int, char**) {
 
     //  Step 1: initialize Cube
     Cube cube;
-    cube.setColor(Direction::F, 1, 1, Color::R);
-    std::cout << stringifyColor(cube.getColor(Direction::F, 1, 1)) << std::endl;
+    cube.setColor(1, 1, 1, Color::R);
+    std::cout << stringifyColor(cube.getColor(1, 1, 1)) << std::endl;
    
     //  Step 2: scan Cube
     cube.scanCube();
+
+    std::cout << stringifyColor(cube.getColor(1, 2, 0))
+     << stringifyColor(cube.getColor(4, 2, 2)) 
+     << stringifyColor(cube.getColor(5, 0, 0)) << std::endl;
+
+    // Step 3: Upper Cross
+    cube.Y();
+
+    cube.printCube();
+
 }

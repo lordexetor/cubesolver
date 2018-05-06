@@ -12,13 +12,13 @@ std::string stringifyColor(Color c) {
     }
 };
 
-Color  getColor(char s) {
+Color  parseColor(char s) {
     switch (s) {
-        case ('W'): return Color::W; break;
-        case ('R'): return Color::R; break;
-        case ('B'): return Color::B; break;
-        case ('O'): return Color::O; break;
-        case ('G'): return Color::G; break;
-        case ('Y'): return Color::Y; break;
+        case ('w'): return Color::W; break;
+        case ('r'): return Color::R; break;
+        case ('b'): return Color::B; break;
+        case ('o'): return Color::O; break;
+        case ('g'): return Color::G; break;
+        case ('y'): return Color::Y; break;
     }
 };

@@ -11,6 +11,6 @@ enum class Color {
 std::string stringifyColor(Color c);
 
 //  Return the color from a character.
-Color getColor(char s);
+Color parseColor(char s);
 
 #endif

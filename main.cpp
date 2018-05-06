@@ -18,7 +18,9 @@ int main(int, char**) {
      << stringifyColor(cube.getColor(5, 0, 0)) << std::endl;
 
     // Step 3: Upper Cross
-    cube.Y();
+    cube.execute("D' F F");
+    // cube.execute("F");
+    // cube.execute("F");
 
     cube.printCube();
 

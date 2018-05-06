@@ -1,6 +1,9 @@
 #include "cube.hpp"
 #include "colors.hpp"
 #include <iostream>
+#include <sstream>
+#include <iterator>
+#include <string>
 
 int intifyDirection(Direction d) {
     switch (d) {
@@ -89,68 +92,77 @@ void Cube::printCube() {
     }
 }
 
-void Cube::F() {
-    // Copy the colors of corner ful
-    Color ufl = getColor(0,2,0);
-    Color luf = getColor(4,0,2);
-    // Copy the colors of edge uf
-    Color uf = getColor(0,2,1);
+void Cube::F(int n = 1) {
+    for (int i = 0; i < n; i++) {
 
-    faceRotate(1);
+        // Copy the colors of corner ful
+        Color ufl = getColor(0,2,0);
+        Color luf = getColor(4,0,2);
+        // Copy the colors of edge uf
+        Color uf = getColor(0,2,1);
 
-    // Rotate the adjacent edges
-    faces[0][2][1] = faces[4][1][2];
-    faces[4][1][2] = faces[5][0][1];
-    faces[5][0][1] = faces[2][1][0];
-    faces[2][1][0] = uf;
+        faceRotate(1);
 
-    //  Rotate the adjacent corners
-    faces[0][2][0] = faces[4][2][2];
-    faces[4][2][2] = faces[5][0][2];
-    faces[5][0][2] = faces[2][0][0];
-    faces[2][0][0] = ufl;
+        // Rotate the adjacent edges
+        faces[0][2][1] = faces[4][1][2];
+        faces[4][1][2] = faces[5][0][1];
+        faces[5][0][1] = faces[2][1][0];
+        faces[2][1][0] = uf;
 
-    faces[4][0][2] = faces[5][0][0];
-    faces[5][0][0] = faces[2][2][0];
-    faces[2][2][0] = faces[0][2][2];
-    faces[0][2][2] = luf;
+        //  Rotate the adjacent corners
+        faces[0][2][0] = faces[4][2][2];
+        faces[4][2][2] = faces[5][0][2];
+        faces[5][0][2] = faces[2][0][0];
+        faces[2][0][0] = ufl;
+
+        faces[4][0][2] = faces[5][0][0];
+        faces[5][0][0] = faces[2][2][0];
+        faces[2][2][0] = faces[0][2][2];
+        faces[0][2][2] = luf;
+    }
 };
 
-void Cube::X() {
-    //  Rotate the axis faces.
-    faceRotate(2);
-    for (int i = 0; i < 3; i++) {
-        faceRotate(4);
-    }
+void Cube::X(int n = 1) {
+    for (int i = 0; i < n; i++) {
+        
+        //  Rotate the axis faces.
+        faceRotate(2);
+        for (int i = 0; i < 3; i++) {
+            faceRotate(4);
+        }
 
-    //  Copy the front face.
-    Face f = getCubeFace(1);
-    //  Rotating the top and back faces about 180 degrees is necessary
-    for (int i = 0; i < 2; i++) {
+        //  Copy the front face.
+        Face f = getCubeFace(1);
+        //  Rotating the top and back faces about 180 degrees is necessary
+        for (int i = 0; i < 2; i++) {
+            faceRotate(0);
+            faceRotate(3);
+        }
+        setCubeFace(1, getCubeFace(5));
+        setCubeFace(5, getCubeFace(3));
+        setCubeFace(3, getCubeFace(0));
+        setCubeFace(0, f);
+    }
+};
+
+void Cube::Y(int n = 1) {
+    for (int i = 0; i < n; i++) {
+
+        //  Rotate the axis faces.
         faceRotate(0);
-        faceRotate(3);
+        for (int i = 0; i < 3; i++) {
+            faceRotate(5);
+        }
+
+        //  Copy the front face.
+        Face f = getCubeFace(1);
+
+        setCubeFace(1, getCubeFace(2));
+        setCubeFace(2, getCubeFace(3));
+        setCubeFace(3, getCubeFace(4));
+        setCubeFace(4, f);
     }
-    setCubeFace(1, getCubeFace(5));
-    setCubeFace(5, getCubeFace(3));
-    setCubeFace(3, getCubeFace(0));
-    setCubeFace(0, f);
-};
-
-void Cube::Y() {
-    //  Rotate the axis faces.
-    faceRotate(0);
-    for (int i = 0; i < 3; i++) {
-        faceRotate(5);
-    }
-
-    //  Copy the front face.
-    Face f = getCubeFace(1);
-
-    setCubeFace(1, getCubeFace(2));
-    setCubeFace(2, getCubeFace(3));
-    setCubeFace(3, getCubeFace(4));
-    setCubeFace(4, f);
-};
+};  
 
 void Cube::faceRotate(int f) {
     //  Copy the upper left corner face and upper edge face
@@ -186,5 +198,83 @@ void Cube::setCubeFace(int f, Face face) {
         for (int j = 0; j < 3; j++) {
             faces[f][i][j] = face.face[i][j];
         }
+    }
+};
+
+void Cube::execute(std::string movement) {
+    //  Search for whitespaces
+    auto whitespace = movement.find(" ");
+    //  If whitespaces are found, split at the first whitespace and execute both halves separately.
+    if (whitespace != std::string::npos) {
+        std::string first = movement.substr(0, whitespace);
+        execute(first);
+
+        //  The second string without leading whitespace
+        std::string second = movement.substr(whitespace);
+        auto trimWhitespace = second.find_first_not_of(" ");
+        if (trimWhitespace != std::string::npos) {
+            std::string trimmedSecond = second.substr(trimWhitespace);
+            execute(trimmedSecond);        
+        }
+    } else {
+
+        //  Cube Rotations
+        if (movement == "X") {
+            X();
+        } else if (movement == "X'") {
+            X(3);
+        } else if (movement == "Y") {
+            Y();
+        } else if (movement == "Y'") {
+            Y(3);
+        } else if (movement == "Z") {
+            // X Y X'
+            X(); Y(); X(3);
+        } else if (movement == "Z'") {
+            // X Y' X'
+            X(); Y(3); X(3);
+        } 
+        
+        //  Basic Face Rotations
+        else if (movement == "F") {
+            F();
+        } else if (movement == "U") {
+            //  X' F X
+            X(3); F(); X();
+        } else if (movement == "R") {
+            // Y F Y'
+            Y(); F(); Y(3);
+        } else if (movement == "L") {
+            // Y' F Y
+            Y(3); F(); Y();
+        } else if (movement == "B") {
+            // Y2 F Y2
+            Y(2); F(); Y(2);
+        } else if (movement == "D") {
+            //  X F X'
+            X(); F(); X(3);
+        }
+
+        //  Basic Inverse Face Rotations
+        else if (movement == "F'") {
+            F(3);
+        } else if (movement == "U'") {
+            //  X' F' X
+            X(3); F(3); X();
+        } else if (movement == "R'") {
+            //  Y F' Y'
+            Y(); F(3); Y(3);
+        } else if (movement == "L'") {
+            //  Y' F' Y
+            Y(3); F(3); Y();
+        } else if (movement == "B'") {
+            //  Y2 F' Y2
+            Y(2); F(3); Y(2);
+        } else if (movement == "D'") {
+            // X F' X'
+            X(); F(3); X(3);
+        }
+        
+        std::cout << movement << std::endl;
     }
 };

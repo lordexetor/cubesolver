@@ -45,11 +45,14 @@ class Cube {
         void scanCube();
 
         //  Rotate the front layer 90 degrees clockwise
-        void F();
+        void F(int n);
         //  Rotate the whole cube 90 degrees clockwise on the R-L-axis
-        void X();
+        void X(int n);
         //  Rotate the whole cube 90 degrees clockwise on the U-D-axis
-        void Y();
+        void Y(int n);
+
+        //  Execute the movements given in notation.
+        void execute(std::string movement);
 
         //  Print the face to the console.
         void printFace(int f);

@@ -41,6 +41,9 @@ class Cube {
         //  - y: the y-coordinate of the cubieFace on the face
         Color getColor(int f, int x, int y);
 
+        //  Returns true, if one of the two faces equals the first color, and the other the second (or vice versa)
+        bool edgeAtPosition(Color c1, Color c2, int f1, int x1, int y1, int f2, int x2, int y2);
+
         //  Requests user input to scan the cube.
         void scanCube();
 

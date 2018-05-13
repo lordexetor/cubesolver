@@ -275,6 +275,14 @@ void Cube::execute(std::string movement) {
             X(); F(3); X(3);
         }
         
-        std::cout << movement << std::endl;
+        std::cout << movement << " ";
     }
+};
+
+bool Cube::edgeAtPosition(Color c1, Color c2, int f1, int x1, int y1, int f2, int x2, int y2) {
+    if ((faces[f1][x1][y1] == c1 && faces[f2][x2][y2] == c2) ||
+        (faces[f1][x1][y1] == c2 && faces[f2][x2][y2] == c1)) {
+            return true;
+        }
+    else return false;
 };

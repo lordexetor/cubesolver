@@ -18,8 +18,17 @@ class Fridrich {
         //  create the 'White Cross' - position and orient the edges of the upper layer.
         void whiteCross();
 
+        //  completes the first two layers
+        void FTL();
+
         //  Position and orient the upper front edge.
         void edgeFrontUp();
+
+        //  One Operation for the FTL (deprecated)
+        void FTLcorner();
+
+        //  Position and orient a corner in the first layer
+        void whiteCorner();
 };
 
 #endif

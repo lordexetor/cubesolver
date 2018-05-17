@@ -286,3 +286,115 @@ bool Cube::edgeAtPosition(Color c1, Color c2, int f1, int x1, int y1, int f2, in
         }
     else return false;
 };
+
+bool Cube::edgeAtPosition(Color c1, Color c2, std::string face1, std::string face2) {
+    if (
+        (fc(face1, c1) && fc(face2, c2)) || 
+        (fc(face1, c2) && fc(face2, c1))
+        ) return true;
+    else return false;
+};
+
+bool Cube::cornerAtPosition(Color c1, Color c2, Color c3, int f1, int x1, int y1, int f2, int x2, int y2, int f3, int x3, int y3) {
+    Color fc1 = faces[f1][x1][y1];
+    Color fc2 = faces[f2][x2][y2];
+    Color fc3 = faces[f3][x3][y3];
+
+    if (
+        (fc1 == c1 && fc2 == c2 && fc3 == c3) ||
+        (fc1 == c1 && fc2 == c3 && fc3 == c2) ||
+        (fc1 == c2 && fc2 == c1 && fc3 == c3) ||
+        (fc1 == c2 && fc2 == c3 && fc3 == c1) ||
+        (fc1 == c3 && fc2 == c1 && fc3 == c2) ||
+        (fc1 == c3 && fc2 == c2 && fc3 == c1) 
+    ) {
+        return true;
+    } else return false;
+};
+
+bool Cube::cornerAtPosition(Color c1, Color c2, Color c3, std::string face1, std::string face2, std::string face3) {
+    if (
+        (fc(face1, c1) && fc(face2, c2) && fc(face3, c3)) ||
+        (fc(face1, c1) && fc(face2, c3) && fc(face3, c2)) ||
+        (fc(face1, c2) && fc(face2, c1) && fc(face3, c3)) ||
+        (fc(face1, c2) && fc(face2, c3) && fc(face3, c1)) ||
+        (fc(face1, c3) && fc(face2, c1) && fc(face3, c2)) ||
+        (fc(face1, c3) && fc(face2, c2) && fc(face3, c1))
+    ) return true; 
+    else return false;
+};
+
+bool Cube::hasColor(Color c, int f, int x, int y) {
+    if (faces[f][x][y] == c) return true;
+    else return false;
+};
+
+Color Cube::f(std::string s) {
+    if (s == "UBL")         return faces[0][0][0];
+    else if (s == "UB")     return faces[0][0][1];
+    else if (s == "UBR")    return faces[0][0][2];
+    else if (s == "UL")     return faces[0][1][0];
+    else if (s == "U")      return faces[0][1][1];
+    else if (s == "UR")     return faces[0][1][2];
+    else if (s == "UFL")    return faces[0][2][0];
+    else if (s == "UF")     return faces[0][2][1];
+    else if (s == "UFR")    return faces[0][2][2];
+
+    else if (s == "FUL")    return faces[1][0][0];
+    else if (s == "FU")     return faces[1][0][1];
+    else if (s == "FUR")    return faces[1][0][2];
+    else if (s == "FL")     return faces[1][1][0];
+    else if (s == "F")      return faces[1][1][1];
+    else if (s == "FR")     return faces[1][1][2];
+    else if (s == "FDL")    return faces[1][2][0];
+    else if (s == "FD")     return faces[1][2][1];
+    else if (s == "FDR")    return faces[1][2][2];
+
+    else if (s == "RUF")    return faces[2][0][0];
+    else if (s == "RU")     return faces[2][0][1];
+    else if (s == "RUB")    return faces[2][0][2];
+    else if (s == "RF")     return faces[2][1][0];
+    else if (s == "R")      return faces[2][1][1];
+    else if (s == "RB")     return faces[2][1][2];
+    else if (s == "RDF")    return faces[2][2][0];
+    else if (s == "RD")     return faces[2][2][1];
+    else if (s == "RDB")    return faces[2][2][2];
+
+    else if (s == "BUR")    return faces[3][0][0];
+    else if (s == "BU")     return faces[3][0][1];
+    else if (s == "BUL")    return faces[3][0][2];
+    else if (s == "BR")     return faces[3][1][0];
+    else if (s == "B")      return faces[3][1][1];
+    else if (s == "BL")     return faces[3][1][2];
+    else if (s == "BDR")    return faces[3][2][0];
+    else if (s == "BD")     return faces[3][2][1];
+    else if (s == "BDL")    return faces[3][2][2];
+
+    else if (s == "LUB")    return faces[4][0][0];
+    else if (s == "LU")     return faces[4][0][1];
+    else if (s == "LUF")    return faces[4][0][2];
+    else if (s == "LB")     return faces[4][1][0];
+    else if (s == "L")      return faces[4][1][1];
+    else if (s == "LF")     return faces[4][1][2];
+    else if (s == "LDB")    return faces[4][2][0];
+    else if (s == "LD")     return faces[4][2][1];
+    else if (s == "LDF")    return faces[4][2][2];
+
+    else if (s == "DFL")    return faces[5][0][0];
+    else if (s == "DF")     return faces[5][0][1];
+    else if (s == "DFR")    return faces[5][0][2];
+    else if (s == "DL")     return faces[5][1][0];
+    else if (s == "D")      return faces[5][1][1];
+    else if (s == "DR")     return faces[5][1][2];
+    else if (s == "DBL")    return faces[5][2][0];
+    else if (s == "DB")     return faces[5][2][1];
+    else if (s == "DBR")    return faces[5][2][2];
+
+    //  Signal that the string is wrong otherwise.
+    else std::cout << "Failed to recognize string " << s << std::endl; return Color::W;
+};
+
+bool Cube::fc(std::string face, Color c) {
+    if (f(face) == c) return true;
+    else return false;
+}

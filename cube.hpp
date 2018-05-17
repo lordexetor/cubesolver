@@ -41,8 +41,20 @@ class Cube {
         //  - y: the y-coordinate of the cubieFace on the face
         Color getColor(int f, int x, int y);
 
-        //  Returns true, if one of the two faces equals the first color, and the other the second (or vice versa)
+        //  Returns true, if one of the two cubieFaces equals the first color, and the other the second (or vice versa)
         bool edgeAtPosition(Color c1, Color c2, int f1, int x1, int y1, int f2, int x2, int y2);
+
+        //  Returns true, if one of the two cubieFaces equals the first color, and the other the second (or vice versa)
+        bool edgeAtPosition(Color c1, Color c2, std::string face1, std::string face2);
+
+        //  Returns true, the given colors equal the cubeFacies, one each, no matter which.
+        bool cornerAtPosition(Color c1, Color c2, Color c3, int f1, int x1, int y1, int f2, int x2, int y2, int f3, int x3, int y3);
+
+        //  Returns true, the given colors equal the cubeFacies, one each, no matter which.
+        bool cornerAtPosition(Color c1, Color c2, Color c3, std::string face1, std::string face2, std::string face3);
+
+        //  Returns true, if the given cubieFace has the given color
+        bool hasColor(Color c, int f, int x, int y);
 
         //  Requests user input to scan the cube.
         void scanCube();
@@ -53,6 +65,13 @@ class Cube {
         void X(int n);
         //  Rotate the whole cube 90 degrees clockwise on the U-D-axis
         void Y(int n);
+
+        //  Returns the color of the given face.
+        //  Face can be e.g. "FUR", "RU", "B"
+        Color f(std::string face);
+
+        //  Returns true if the given face has the given color.
+        bool fc(std::string face, Color c);
 
         //  Execute the movements given in notation.
         void execute(std::string movement);

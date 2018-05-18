@@ -12,6 +12,7 @@ void Fridrich::solve() {
     FTL();
     std::cout << std::endl;
     yellowCross();
+    positionYellowEdges();
 };
 
 void Fridrich::whiteCross() {
@@ -295,4 +296,39 @@ void Fridrich::yellowCross() {
         cube.execute(yellowCrossAlgorithm);
         yellowCross();
     }
+    std::cout << std::endl;
+};
+
+void Fridrich::positionYellowEdges() {
+    std::string switchPositions = "R U R' U R U U R' U";
+    
+    Color F = cube.f("F");
+    Color L = cube.f("L");
+    Color B = cube.f("B");
+
+    //  Edges are already positioned correctly
+    if (cube.fc("F", F) && cube.fc("L", L) && cube.fc("B", B)) { /* Do nothing */ }
+    //  F <--> L
+    else if (cube.fc("F", L) && cube.fc("L", F)) {
+        cube.execute(switchPositions);
+        positionYellowEdges();
+    }
+    //  F <--> B
+    else if (cube.fc("F", B) && cube.fc("B", F)) {
+        cube.execute(switchPositions);
+        std::cout << std::endl;
+        cube.execute("Y Y");
+        cube.execute("U");
+        cube.execute("Y'");
+        std::cout << std::endl;
+        cube.execute(switchPositions);
+        positionYellowEdges();
+    }
+    //  any other case
+    else {
+        cube.execute("U");
+        positionYellowEdges();
+    }
+
+    std::cout << std::endl;
 };

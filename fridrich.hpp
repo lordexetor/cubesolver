@@ -35,6 +35,9 @@ class Fridrich {
 
         //  create the 'Yellow Cross' - orient the edges of the third layer.
         void yellowCross();
+
+        //  position the edges of the third layer.
+        void positionYellowEdges();
 };
 
 #endif

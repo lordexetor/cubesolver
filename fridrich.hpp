@@ -15,7 +15,7 @@ class Fridrich {
         //  The cube to be solved.
         Cube cube;
 
-        //  create the 'White Cross' - position and orient the edges of the upper layer.
+        //  create the 'White Cross' - position and orient the edges of the first layer.
         void whiteCross();
 
         //  completes the first two layers
@@ -29,6 +29,12 @@ class Fridrich {
 
         //  Position and orient a corner in the first layer
         void whiteCorner();
+
+        //  Position and orient the front right edge.
+        void edgeFrontRight();
+
+        //  create the 'Yellow Cross' - orient the edges of the third layer.
+        void yellowCross();
 };
 
 #endif

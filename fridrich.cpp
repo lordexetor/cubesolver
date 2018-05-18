@@ -10,6 +10,8 @@ void Fridrich::solve() {
     whiteCross();
     std::cout << std::endl;
     FTL();
+    std::cout << std::endl;
+    yellowCross();
 };
 
 void Fridrich::whiteCross() {
@@ -113,7 +115,18 @@ void Fridrich::FTL() {
         cube.execute("Y");
         std::cout << std::endl;
     }
-};
+    
+    std::cout << std::endl;
+    cube.execute("X X");
+    std::cout << std::endl;
+
+    for (int i = 0; i < 4; i++) {
+        edgeFrontRight();        
+        std::cout << std::endl;
+        cube.execute("Y");
+        std::cout << std::endl;
+
+    }};
 
 void Fridrich::whiteCorner() {
     Color F = cube.f("F");
@@ -124,6 +137,7 @@ void Fridrich::whiteCorner() {
     if (cube.cornerAtPosition(F,U,R,"FUR", "RUF", "UFR") && cube.fc("UFR", U)) {
         // do nothing
     } 
+    //  When in corner FDR, move to corner FUR, depending on orientation
     //  FDR U=D
     else if (cube.cornerAtPosition(F,U,R,"FDR", "RDF", "DFR") && cube.fc("DFR", U)) {
         cube.execute("D R D' R R D R");
@@ -175,143 +189,110 @@ void Fridrich::whiteCorner() {
     }
 };
 
-// void Fridrich::FTLcorner() {
-//    //  FR and FDR already correct
-//     if (cube.hasColor(F,1,1,2) && cube.hasColor(R,2,1,0) && cube.hasColor(F,1,2,2) && cube.hasColor(R,2,2,0) && cube.hasColor(D,5,0,2)) {
-//         //  do nothing
-//     }
-    
-//     //  1st: Easy cases
-//     else if (cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2) && cube.hasColor(D,2,0,0) && cube.hasColor(F,0,0,1) && cube.hasColor(R,3,0,1)) {
-//         cube.execute("R U R'");
-//     }
-//     else if (cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0) && cube.hasColor(F,4,0,1) && cube.hasColor(R,0,1,0)) {
-//         cube.execute("F' U' F");
-//     }
-//     else if (cube.hasColor(F,1,0,1) && cube.hasColor(R,0,2,1) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2) && cube.hasColor(D,2,0,0)) {
-//         cube.execute("U' F' U F");
-//     }
-//     else if (cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0) && cube.hasColor(F,0,1,2) && cube.hasColor(R,2,0,1)) {
-//         cube.execute("U R U' R'");
-//     }
+void Fridrich::edgeFrontRight() {
+    Color F = cube.f("F");
+    Color R = cube.f("R");
 
-//     //  2nd: Corner in bottom, edge in top
-//     else if (cube.hasColor(F,1,0,1) && cube.hasColor(R,0,2,1) && cube.hasColor(F,1,2,2) && cube.hasColor(D,5,0,2) && cube.hasColor(R,2,2,0)) {
-//         cube.execute("U R U' R' U' F' U F");
-//     }
-//     else if (cube.hasColor(F,0,1,2) && cube.hasColor(R,2,0,1) && cube.hasColor(F,1,2,2) && cube.hasColor(D,5,0,2) && cube.hasColor(R,2,2,0)) {
-//         cube.execute("U' F' U F U R U' R'");
-//     }
-//     else if (cube.hasColor(F,1,0,1) && cube.hasColor(R,0,2,1) && cube.hasColor(F,5,0,2) && cube.hasColor(R,1,2,2) && cube.hasColor(D,2,2,0)) {
-//         cube.execute("F' U F U' F' U F");
-//     } 
-//     else if (cube.hasColor(F,0,1,2) && cube.hasColor(R,2,0,1) && cube.hasColor(F,5,0,2) && cube.hasColor(R,1,2,2) && cube.hasColor(D,2,2,0)) {
-//         cube.execute("R U R' U' R U R'");
-//     }
-//     else if (cube.hasColor(F,0,1,2) && cube.hasColor(R,2,0,1) && cube.hasColor(D,1,2,2) && cube.hasColor(F,2,2,0) && cube.hasColor(R,5,0,2)) {
-//         cube.execute("R U' R' U R U' R'");
-//     }
-//     else if (cube.hasColor(F,1,0,1) && cube.hasColor(R,0,2,1) && cube.hasColor(D,1,2,2) && cube.hasColor(F,2,2,0) && cube.hasColor(R,5,0,2)) {
-//         cube.execute("F' U' F U F' U' F");
-//     }
+    //  The edge is already in the correct orientation and position.
+    if (cube.edgeAtPosition(F,R,"FR","RF") && cube.fc("FR",F)) {/* Do nothing */}
+    //  UF, F=F
+    else if (cube.edgeAtPosition(F,R,"FU","UF") && cube.fc("FU",F)) {
+        cube.execute("U R U' R' U' F' U F");
+    }
+    //  UF, F=U
+    else if (cube.edgeAtPosition(F,R,"FU","UF") && cube.fc("UF", F)) {
+        cube.execute("U");
+        cube.execute("Y'");
+        cube.execute("U R U' R' U' F' U F");
+        cube.execute("Y");
+    }
+    //  FR, F=R
+    else if (cube.edgeAtPosition(F,R,"FR","RF") && cube.fc("FR", R)) {
+        cube.execute("U R U' R' U' F' U F U U");
+        std::cout << std::endl;
+        cube.execute("U R U' R' U' F' U F");
+        edgeFrontRight();
+    }
+    //  UR
+    else if (cube.edgeAtPosition(F,R,"UR","RU")) {
+        cube.execute("U");
+        edgeFrontRight();
+    } 
+    //  UB
+    else if (cube.edgeAtPosition(F,R,"UB","BU")) {
+        cube.execute("U U");
+        edgeFrontRight();
+    }
+    //  UL
+    else if (cube.edgeAtPosition(F,R,"UL","LU")) {
+        cube.execute("U'");
+        edgeFrontRight();
+    }
+    //  BR
+    else if (cube.edgeAtPosition(F,R,"RB","BR")) {
+        cube.execute("Y");
+        std::cout << std::endl;
+        cube.execute("U R U' R' U' F' U F");
+        std::cout << std::endl;
+        cube.execute("Y'");
+        std::cout << std::endl;
+        edgeFrontRight();
+    }
+    //  BL
+    else if (cube.edgeAtPosition(F,R,"BL","LB")) {
+        cube.execute ("Y Y");
+        std::cout << std::endl;
+        cube.execute("U R U' R' U' F' U F");
+        std::cout << std::endl;
+        cube.execute("Y Y");
+        std::cout << std::endl;
+        edgeFrontRight();
+    }
+    // FL
+    else if (cube.edgeAtPosition(F,R,"FL","LF")) {
+        cube.execute("U' L' U L U F U' F'");
+        edgeFrontRight();
+    }
+};
 
-//     //  3rd: Corner in top, edge in middle
-//     else if (cube.hasColor(F,1,1,2) && cube.hasColor(R,2,1,0) && cube.hasColor(D,0,2,2) && cube.hasColor(R,1,0,2) && cube.hasColor(F,2,0,0)) {
-//         cube.execute("R U R' U' R U R' U' R U R'");
-//     }
-//     else if (cube.hasColor(F,1,1,2) && cube.hasColor(R,2,1,0) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U F' U F U F' U U F");
-//     }
-//     else if (cube.hasColor(R,1,1,2) && cube.hasColor(F,2,1,0) && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//         //  TODO: translate U Y' to d
-//         cube.execute("R U' R' U Y' R' U R");
-//     }
-//     else if (cube.hasColor(R,1,1,2) && cube.hasColor(F,2,1,0) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         //  TODO: translate U' Y to d'
-//         cube.execute("U F' U' F U' Y F U F'");
-//     }
-//     else if (cube.hasColor(F,1,1,2) && cube.hasColor(R,2,1,0) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U' R U' R' U' R U U R'");
-//     }
-//     else if (cube.hasColor(R,1,1,2) && cube.hasColor(F,2,1,0) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         //  TODO: translate U Y' to d
-//         cube.execute("U' R U R' U Y' R' U' R");
-//     }
+void Fridrich::yellowCross() {
+    std::string yellowCrossAlgorithm = "F R U R' U F'";
+    Color U = cube.f("U");
 
-//     //  4th Corner pointing outwards, edge top
-//     else if (cube.hasColor(F,2,0,1) && cube.hasColor(R,0,1,2) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         //  TODO: translate U Y' to d
-//         cube.execute("R U' R' U U Y' R' U' R");
-//     }
-//     else if (cube.hasColor(F,0,2,1) && cube.hasColor(R,1,0,1) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         //  TODO: translate U' Y to d'
-//         cube.execute("F' U F U' U' Y F U F'");
-//     } 
-//     else if (cube.hasColor(R,0,0,1) && cube.hasColor(F,3,0,1) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U F' U U F U F' U U F");
-//     }
-//     else if (cube.hasColor(F,0,1,0) && cube.hasColor(R,4,0,1) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U' R U U R' U' R U U R'");
-//     }
-
-//     else if (cube.hasColor(R,0,1,0) && cube.hasColor(F,4,0,1) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U F' U' F U F' U U F");
-//     }
-//     else if (cube.hasColor(F,0,0,1) && cube.hasColor(R,3,0,1) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U' R U R' U' R U U R'");
-//     }
-//     else if (cube.hasColor(F,0,1,2) && cube.hasColor(R,2,0,1) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U' R U' R' U R U R'");
-//     }
-//     else if (cube.hasColor(R,0,2,1) && cube.hasColor(F,1,0,1) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U F' U F U' F' U' F");
-//     }
-
-//     else if (cube.hasColor(F,0,0,1) && cube.hasColor(R,4,0,1) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U' R U R' U R U R'");
-//     }
-//     else if (cube.hasColor(F,3,0,1) && cube.hasColor(R,0,0,1) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U F' U' F U' F' U' F");
-//     }
-//     else if (cube.hasColor(F,0,2,1) && cube.hasColor(R,1,0,1) && cube.hasColor(D,2,0,0) && cube.hasColor(F,1,0,2) && cube.hasColor(R,0,2,2)) {
-//         cube.execute("U F' U U F U' R U R'");
-//     }
-//     else if (cube.hasColor(F,2,0,1) && cube.hasColor(R,0,1,2) && cube.hasColor(D,1,0,2) && cube.hasColor(F,0,2,2) && cube.hasColor(R,2,0,0)) {
-//         cube.execute("U' R U U R' U F' U' F");
-//     }
-       
-//     // //  5th: corner pointing up, edge top
-//     // else if (cube.hasColor(F,0,2,1) && cube.hasColor(R,1,0,1) && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("R U R' U' U' R U R' U' R U R'");
-//     // }
-//     // else if (cube.hasColor(F,2,0,1) && cube.hasColor(R,0,1,2) && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("Y' R' U' R U U R' U' R U R' U' R' Y");
-//     // }
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-//     // else if (cube.hasColor() && cube.hasColor() && cube.hasColor(D,0,2,2) && cube.hasColor(F,2,0,0) && cube.hasColor(R,1,0,2)) {
-//     //     cube.execute("");
-//     // }
-
-
-//     // for copypaste
-//     else if (cube.hasColor() && cube.hasColor() && cube.hasColor() && cube.hasColor() && cube.hasColor()) {
-//         cube.execute("");
-//     }
-
-
-// };
+    //  The edges are already in the correct orientation
+    if (cube.fc("UL", U) && cube.fc("UB", U) && cube.fc("UR", U) && cube.fc("UF", U)) { /* Do nothing */ }
+    //  left and right edges are in the correct orientation
+    else if (cube.fc("UL", U) && cube.fc("UR", U)) {
+        cube.execute(yellowCrossAlgorithm);
+    }
+    //  front and back edges are in the correct orientation
+    else if (cube.fc("UB", U) && cube.fc("UF", U)) {
+        cube.execute("U");
+        yellowCross();
+    }
+    //  back and left edges are in the correct orientation
+    else if (cube.fc("UB", U) && cube.fc("UL", U)) {
+        cube.execute(yellowCrossAlgorithm);
+        yellowCross();
+    }
+    //  back and right edges are in the correct orientation
+    else if (cube.fc("UB", U) && cube.fc("UR", U)) {
+        cube.execute("U'");
+        yellowCross();
+    }
+    //  front and right edges are in the correct orientation
+    else if (cube.fc("UR", U) && cube.fc("UF", U)) {
+        cube.execute("U U");
+        yellowCross();
+    }
+    //  front and left edges are in the correct orientation
+    else if (cube.fc("UL", U) && cube.fc("UF", U)) {
+        cube.execute("U");
+        yellowCross();
+    }
+    //  no edges are in the correct orientation
+    else {
+        cube.execute(yellowCrossAlgorithm);
+        yellowCross();
+    }
+};

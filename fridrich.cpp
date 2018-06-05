@@ -18,6 +18,13 @@ void Fridrich::solve() {
     yellowCross();
     std::cout << std::endl << "-----------------------" << std::endl;;
     positionYellowEdges();
+
+    std::cout << std::endl << "-----------------------" << std::endl;;
+    positionYellowCorners();
+    std::cout << std::endl << "-----------------------" << std::endl;;
+    for (int i = 0; i < 4; i++) {
+        orientYellowCorners();
+    }
 };
 
 void Fridrich::whiteCross() {
@@ -122,11 +129,6 @@ void Fridrich::FTL() {
         cube.execute("Y");
         std::cout << std::endl;
     }
-    std::cout << "-----------------------" << std::endl;;
-
-
-    cube.printCube();
-
     std::cout << "-----------------------" << std::endl;;
     cube.execute("X X");
     std::cout << std::endl;
@@ -316,16 +318,17 @@ void Fridrich::positionYellowEdges() {
     Color F = cube.f("F");
     Color L = cube.f("L");
     Color B = cube.f("B");
+    Color R = cube.f("R");
 
     //  Edges are already positioned correctly
-    if (cube.fc("F", F) && cube.fc("L", L) && cube.fc("B", B)) { /* Do nothing */ }
+    if (cube.fc("FU", F) && cube.fc("LU", L) && cube.fc("BU", B)) { /* Do nothing */ }
     //  F <--> L
-    else if (cube.fc("F", L) && cube.fc("L", F)) {
+    else if (cube.fc("FU", L) && cube.fc("LU", F)) {
         cube.execute(switchPositions);
         positionYellowEdges();
     }
     //  F <--> B
-    else if (cube.fc("F", B) && cube.fc("B", F)) {
+    else if (cube.fc("FU", B) && cube.fc("BU", F)) {
         cube.execute(switchPositions);
         std::cout << std::endl;
         cube.execute("Y Y");
@@ -338,11 +341,76 @@ void Fridrich::positionYellowEdges() {
         std::cout << std::endl;
         positionYellowEdges();
     }
+    //  F --> B --> L
+    else if (cube.fc("FU", B) && cube.fc("BU", L) && cube.fc("LU", F)) {
+        cube.execute(switchPositions);
+        std::cout << std::endl;
+        positionYellowEdges();
+    }
     //  any other case
     else {
-        cube.execute("U");
+        cube.execute("Y");
         positionYellowEdges();
     }
 
+    std::cout << std::endl;
+};
+
+void Fridrich::positionYellowCorners() {
+    std::string positionCorners {"U R U' L' U R' U' L"};
+    
+    Color F = cube.f("F");
+    Color L = cube.f("L");
+    Color B = cube.f("B");
+    Color R = cube.f("R");
+    Color U = cube.f("U");
+
+    if (cube.cornerAtPosition(F, R, U, "FUR", "RUF", "UFR")) {
+        //  The corners are positioned correctly
+        if (cube.cornerAtPosition(F, U, L, "FUL", "LUF", "UFL")) { /* Do nothing */ }
+        else {
+            cube.execute(positionCorners);
+            positionYellowCorners();
+        }
+    } else if (cube.cornerAtPosition(F, U, L, "FUL", "LUF", "UFL")) {
+        cube.execute("Y'");
+        std::cout << std::endl;
+        cube.execute(positionCorners);
+        std::cout << std::endl;
+        cube.execute("Y");
+        std::cout << std::endl;
+        positionYellowCorners();
+    } else if (cube.cornerAtPosition(B, U, R, "BUR", "RUB", "UBR")) {
+        cube.execute("Y");
+        std::cout << std::endl;
+        cube.execute(positionCorners);
+        std::cout << std::endl;
+        cube.execute("Y'");
+        std::cout << std::endl;
+        positionYellowCorners();
+    } else if (cube.cornerAtPosition(B, U, L, "BUL", "LUB", "UBL")) {
+        cube.execute("Y Y");
+        std::cout << std::endl;
+        cube.execute(positionCorners);
+        std::cout << std::endl;
+        cube.execute("Y Y");
+        std::cout << std::endl;
+        positionYellowCorners();
+    } else {
+        cube.execute(positionCorners);
+        positionYellowCorners();
+    }
+};
+
+void Fridrich::orientYellowCorners() {
+    std::string flipFUR {"R' D' R D"};
+    Color U = cube.f("U");
+
+    while (!cube.fc("UFR", U)) {
+        cube.execute(flipFUR);
+        std::cout << std::endl;
+    }
+
+    cube.execute("U");
     std::cout << std::endl;
 };

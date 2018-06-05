@@ -38,6 +38,12 @@ class Fridrich {
 
         //  position the edges of the third layer.
         void positionYellowEdges();
+
+        //  position the corners of the third layer.
+        void positionYellowCorners();
+
+        //  orient the corners of the third layer.
+        void orientYellowCorners();
 };
 
 #endif
